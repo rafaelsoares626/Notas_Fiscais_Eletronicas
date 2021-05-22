@@ -1,6 +1,4 @@
 # 01 - IMPORTANDO AS NOTAS FISCAIS ELETRONICAS
-#Antes de proceder à importação, deve-se seguir os seguintes passos:
-
 #1 - Abra um arquivo .ods em branco;
 #2 - Digite um X maiúsculo na linha 1, coluna 1;
 #3 - Acesse o portal da NFe (página da consulta através da chave);
@@ -15,10 +13,10 @@ df <- readODS::read_ods("Tratar_NFe_R.ods")
 
 # CRIANDO UMA TABELA PARA ARMAZENAR OS DADOS TRATADOS
 # Criando um vetor de tres posições
-vetor <- 1:43
+vetor <- 1:45
 
 # Criando uma matriz através do vetor
-A <- matrix(vetor, 1, 43)
+A <- matrix(vetor, 1, 45)
 
 # Transformando a matriz  em data frame
 dfNFe <- as.data.frame(A)
@@ -67,6 +65,9 @@ dfNFe$V40 <- NA
 dfNFe$V41 <- NA
 dfNFe$V42 <- NA
 dfNFe$V43 <- NA
+dfNFe$V44 <- NA
+dfNFe$V45 <- NA
+
 
 # Inserindo os títulos do data frame
 titulo <- names(dfNFe)
@@ -156,6 +157,10 @@ titulo[(names(dfNFe) == "V42")] = "posDados_Emitente"
 colnames(dfNFe) = titulo
 titulo[(names(dfNFe) == "V43")] = "posDados_Destinatario"
 colnames(dfNFe) = titulo
+titulo[(names(dfNFe) == "V44")] = "posDados_Produtos"
+colnames(dfNFe) = titulo
+titulo[(names(dfNFe) == "V45")] = "qtd_Produtos"
+colnames(dfNFe) = titulo
 
 library(dplyr)
 
@@ -170,7 +175,7 @@ while(contadorPrincipal <= qtdLinhas){
     dfNFe$posChave_Acesso[contadorDfNFe] <- contadorPrincipal
     contadorDfNFe <- contadorDfNFe + 1
     # Já inserindo uma nova linha para eventual repetição do laço
-    novaLinha <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+    novaLinha <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
     names(novaLinha) <- titulo
     dfNFe <- rbind(dfNFe, novaLinha) 
   }
@@ -656,4 +661,41 @@ while(contadorPrincipal <= qtdLinhas){
   }
   contadorPrincipal <- contadorPrincipal + 1
 } 
+
+# DADOS DOS PRODUTOS ##############################################
+# Preenchimento da coluna posDados_Produtos
+contadorPrincipal <- 1
+contadorDfNFe <- 1
+qtdLinhas <- nrow(df)
+# Preenchendo a coluna do novo data frame
+while(contadorPrincipal <= qtdLinhas){
+  if(!is.na(df$X[contadorPrincipal]) & (df$X[contadorPrincipal] == "Dados dos Produtos e Serviços") == TRUE){
+    dfNFe$posDados_Produtos[contadorDfNFe] <- contadorPrincipal
+    contadorDfNFe <- contadorDfNFe + 1
+  }
+  contadorPrincipal <- contadorPrincipal + 1
+}  
+
+# Verificando o numero de produtos registrados em cada nota
+contadorDfNFe <- 1
+qtdLinhas <- nrow(df)
+while(contadorDfNFe < nrow(dfNFe)){
+  qtdProdutos <- 0
+  contadorPrincipal <- 1
+  while(contadorPrincipal <= qtdLinhas){
+    if((contadorPrincipal >= dfNFe$posDados_Produtos[contadorDfNFe] & contadorPrincipal < dfNFe$posDados_Produtos[contadorDfNFe + 1]) | (dfNFe$posDados_Produtos[contadorDfNFe] <= contadorPrincipal & contadorDfNFe == nrow(dfNFe) - 1)){
+      if(!is.na(df$X[contadorPrincipal]) & (df$X[contadorPrincipal] == "Código do Produto") == TRUE){
+        qtdProdutos <- qtdProdutos + 1
+        dfNFe$qtd_Produtos[contadorDfNFe] <- qtdProdutos
+      }
+    }
+    contadorPrincipal <- contadorPrincipal + 1
+  }
+  #contadorPrincipal <- contadorPrincipal - 1
+  contadorDfNFe <- contadorDfNFe + 1
+}
+
+
+
+soma <- sum(na.omit(dfNFe$qtd_Produtos))
 
