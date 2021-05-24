@@ -12,11 +12,11 @@ setwd("C:/Users/rafae/Desktop/RAFAEL/CEAT/TELETRABALHO - QUARENTENA 2021/06")
 df <- readODS::read_ods("Tratar_NFe_R.ods")
 
 # CRIANDO UMA TABELA PARA ARMAZENAR OS DADOS TRATADOS
-# Criando um vetor de tres posições
-vetor <- 1:45
+# Criando um vetor de 46 posições
+vetor <- 1:46
 
 # Criando uma matriz através do vetor
-A <- matrix(vetor, 1, 45)
+A <- matrix(vetor, 1, 46)
 
 # Transformando a matriz  em data frame
 dfNFe <- as.data.frame(A)
@@ -67,7 +67,7 @@ dfNFe$V42 <- NA
 dfNFe$V43 <- NA
 dfNFe$V44 <- NA
 dfNFe$V45 <- NA
-
+dfNFe$V46 <- NA
 
 # Inserindo os títulos do data frame
 titulo <- names(dfNFe)
@@ -161,6 +161,8 @@ titulo[(names(dfNFe) == "V44")] = "posDados_Produtos"
 colnames(dfNFe) = titulo
 titulo[(names(dfNFe) == "V45")] = "qtd_Produtos"
 colnames(dfNFe) = titulo
+titulo[(names(dfNFe) == "V46")] = "qtd_Produtos_acum"
+colnames(dfNFe) = titulo
 
 library(dplyr)
 
@@ -175,7 +177,7 @@ while(contadorPrincipal <= qtdLinhas){
     dfNFe$posChave_Acesso[contadorDfNFe] <- contadorPrincipal
     contadorDfNFe <- contadorDfNFe + 1
     # Já inserindo uma nova linha para eventual repetição do laço
-    novaLinha <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+    novaLinha <- data.frame(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
     names(novaLinha) <- titulo
     dfNFe <- rbind(dfNFe, novaLinha) 
   }
@@ -695,7 +697,201 @@ while(contadorDfNFe < nrow(dfNFe)){
   contadorDfNFe <- contadorDfNFe + 1
 }
 
-
-
+dfNFe$qtd_Produtos_acum <- cumsum(dfNFe$qtd_Produtos)
 soma <- sum(na.omit(dfNFe$qtd_Produtos))
+
+# TRATAMENTO DOS PRODUTOS CONSTANTES DAS NFes ##################################
+
+# CRIANDO UMA TABELA PARA ARMAZENAR OS DADOS TRATADOS
+# Criando um vetor de 45 posições
+vetorB <- soma:45
+
+# Criando uma matriz através do vetor
+B <- matrix(vetor, soma, 45)
+
+# Transformando a matriz  em data frame
+dfNFe_Produtos <- as.data.frame(B)
+
+# Inicializando a matriz
+dfNFe_Produtos$V1 <- NA
+dfNFe_Produtos$V2 <- NA
+dfNFe_Produtos$V3 <- NA
+dfNFe_Produtos$V4 <- NA
+dfNFe_Produtos$V5 <- NA
+dfNFe_Produtos$V6 <- NA
+dfNFe_Produtos$V7 <- NA
+dfNFe_Produtos$V8 <- NA
+dfNFe_Produtos$V9 <- NA
+dfNFe_Produtos$V10 <- NA
+dfNFe_Produtos$V11 <- NA
+dfNFe_Produtos$V12 <- NA
+dfNFe_Produtos$V13 <- NA
+dfNFe_Produtos$V14 <- NA
+dfNFe_Produtos$V15 <- NA
+dfNFe_Produtos$V16 <- NA
+dfNFe_Produtos$V17 <- NA
+dfNFe_Produtos$V18 <- NA
+dfNFe_Produtos$V19 <- NA
+dfNFe_Produtos$V20 <- NA
+dfNFe_Produtos$V21 <- NA
+dfNFe_Produtos$V22 <- NA
+dfNFe_Produtos$V23 <- NA
+dfNFe_Produtos$V24 <- NA
+dfNFe_Produtos$V25 <- NA
+dfNFe_Produtos$V26 <- NA
+dfNFe_Produtos$V27 <- NA
+dfNFe_Produtos$V28 <- NA
+dfNFe_Produtos$V29 <- NA
+dfNFe_Produtos$V30 <- NA
+dfNFe_Produtos$V31 <- NA
+dfNFe_Produtos$V32 <- NA
+dfNFe_Produtos$V33 <- NA
+dfNFe_Produtos$V34 <- NA
+dfNFe_Produtos$V35 <- NA
+dfNFe_Produtos$V36 <- NA
+dfNFe_Produtos$V37 <- NA
+dfNFe_Produtos$V38 <- NA
+dfNFe_Produtos$V39 <- NA
+dfNFe_Produtos$V40 <- NA
+dfNFe_Produtos$V41 <- NA
+dfNFe_Produtos$V42 <- NA
+dfNFe_Produtos$V43 <- NA
+dfNFe_Produtos$V44 <- NA
+dfNFe_Produtos$V45 <- NA
+
+
+# Inserindo os títulos do data frame
+titulo <- names(dfNFe_Produtos)
+titulo[(names(dfNFe_Produtos) == "V1")] = "Chave de Acesso"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V2")] = "Número NF-e"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V3")] = "Data de Emissão"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V4")] = "Data/Hora de Saída ou da Entrada"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V5")] = "Valor Total da Nota Fiscal"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V6")] = "Destino da operação"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V7")] = "Consumidor final"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V8")] = "Natureza da Operação"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V9")] = "Tipo da Operação"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V10")] = "Autorização de Uso"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V11")] = "Nome / Razão Social Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V12")] = "Nome Fantasia Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V13")] = "CNPJ Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V14")] = "Endereço Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V15")] = "Bairro / Distrito Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V16")] = "CEP Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V17")] = "Município Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V18")] = "Telefone Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V19")] = "UF Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V20")] = "País Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V21")] = "Nome / Razão Social Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V22")] = "CNPJ Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V23")] = "Endereço Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V24")] = "Bairro / Distrito Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V25")] = "CEP Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V26")] = "Município Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V27")] = "Telefone Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V28")] = "UF Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V29")] = "País Destinatário"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V30")] = "Num."
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V31")] = "Descrição"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V32")] = "Qtd."
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V33")] = "Unidade Comercial"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V34")] = "Valor(R$)"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V35")] = "Código do Produto"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V36")] = "Código NCM"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V37")] = "CFOP"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V38")] = "Código EAN Comercial"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V39")] = "Valor unitário de comercialização"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V40")] = "Informações adicionais do produto"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V41")] = "posChave_Acesso"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V42")] = "posDados_Emitente"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V43")] = "posDados_Destinatario"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V44")] = "posDados_Produtos"
+colnames(dfNFe_Produtos) = titulo
+titulo[(names(dfNFe_Produtos) == "V45")] = "qtd_Produtos"
+colnames(dfNFe_Produtos) = titulo
+
+
+# Verificando o numero de produtos registrados em cada nota
+contadorDfNFe <- 1
+contadorDfNFe_Produtos <- 1
+
+while(contadorDfNFe <= nrow(dfNFe) - 1){
+  while(contadorDfNFe_Produtos <= dfNFe$qtd_Produtos_acum[contadorDfNFe]){
+    dfNFe_Produtos$`Chave de Acesso`[contadorDfNFe_Produtos] <- dfNFe$`Chave de Acesso`[contadorDfNFe]
+    dfNFe_Produtos$`Número NF-e`[contadorDfNFe_Produtos] <- dfNFe$`Número NF-e`[contadorDfNFe]
+    dfNFe_Produtos$`Data de Emissão`[contadorDfNFe_Produtos] <- dfNFe$`Data de Emissão`[contadorDfNFe]
+    dfNFe_Produtos$`Data/Hora de Saída ou da Entrada`[contadorDfNFe_Produtos] <- dfNFe$`Data/Hora de Saída ou da Entrada`[contadorDfNFe]
+    dfNFe_Produtos$`Valor Total da Nota Fiscal`[contadorDfNFe_Produtos] <- dfNFe$`Valor Total da Nota Fiscal`[contadorDfNFe]
+    dfNFe_Produtos$`Destino da operação`[contadorDfNFe_Produtos] <- dfNFe$`Destino da operação`[contadorDfNFe]
+    dfNFe_Produtos$`Consumidor final`[contadorDfNFe_Produtos] <- dfNFe$`Consumidor final`[contadorDfNFe]
+    dfNFe_Produtos$`Natureza da Operação`[contadorDfNFe_Produtos] <- dfNFe$`Natureza da Operação`[contadorDfNFe]
+    dfNFe_Produtos$`Tipo da Operação`[contadorDfNFe_Produtos] <- dfNFe$`Tipo da Operação`[contadorDfNFe]
+    dfNFe_Produtos$`Autorização de Uso`[contadorDfNFe_Produtos] <- dfNFe$`Autorização de Uso`[contadorDfNFe]
+    dfNFe_Produtos$`Nome / Razão Social Emitente`[contadorDfNFe_Produtos] <- dfNFe$`Nome / Razão Social Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`Nome Fantasia Emitente`[contadorDfNFe_Produtos] <- dfNFe$`Nome Fantasia Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`CNPJ Emitente`[contadorDfNFe_Produtos] <- dfNFe$`CNPJ Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`Endereço Emitente`[contadorDfNFe_Produtos] <- dfNFe$`Endereço Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`Bairro / Distrito Emitente`[contadorDfNFe_Produtos] <- dfNFe$`Bairro / Distrito Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`CEP Emitente`[contadorDfNFe_Produtos] <- dfNFe$`CEP Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`Município Emitente`[contadorDfNFe_Produtos] <- dfNFe$`Município Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`Telefone Emitente`[contadorDfNFe_Produtos] <- dfNFe$`Telefone Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`UF Emitente`[contadorDfNFe_Produtos] <- dfNFe$`UF Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`País Emitente`[contadorDfNFe_Produtos] <- dfNFe$`País Emitente`[contadorDfNFe]
+    dfNFe_Produtos$`Nome / Razão Social Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`Nome / Razão Social Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`CNPJ Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`CNPJ Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`Endereço Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`Endereço Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`Bairro / Distrito Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`Bairro / Distrito Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`CEP Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`CEP Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`Município Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`Município Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`Telefone Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`Telefone Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`UF Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`UF Destinatário`[contadorDfNFe]
+    dfNFe_Produtos$`País Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`País Destinatário`[contadorDfNFe]
+    
+    contadorDfNFe_Produtos <- contadorDfNFe_Produtos + 1
+  }
+  contadorDfNFe <- contadorDfNFe + 1
+}
 
