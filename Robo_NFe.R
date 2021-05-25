@@ -704,7 +704,7 @@ soma <- sum(na.omit(dfNFe$qtd_Produtos))
 
 # CRIANDO UMA TABELA PARA ARMAZENAR OS DADOS TRATADOS
 # Criando um vetor de 45 posições
-vetorB <- soma:45
+vetorB <- 1:45
 
 # Criando uma matriz através do vetor
 B <- matrix(vetor, soma, 45)
@@ -889,9 +889,62 @@ while(contadorDfNFe <= nrow(dfNFe) - 1){
     dfNFe_Produtos$`Telefone Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`Telefone Destinatário`[contadorDfNFe]
     dfNFe_Produtos$`UF Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`UF Destinatário`[contadorDfNFe]
     dfNFe_Produtos$`País Destinatário`[contadorDfNFe_Produtos] <- dfNFe$`País Destinatário`[contadorDfNFe]
-    
     contadorDfNFe_Produtos <- contadorDfNFe_Produtos + 1
   }
   contadorDfNFe <- contadorDfNFe + 1
 }
 
+
+# Preenchendo os dados os produtos propriamente ditos
+
+# Preenchendo do numero do produto ao código NCM
+contadorDfNFe_Produtos <- 1
+contadorDf <- 1
+while(contadorDf <= nrow(df)){
+  if(!is.na(df$X[contadorDf]) & (df$X[contadorDf] == "Código do Produto") == TRUE){
+    dfNFe_Produtos$Num.[contadorDfNFe_Produtos] <- df$X[contadorDf - 5]
+    dfNFe_Produtos$Descrição[contadorDfNFe_Produtos] <- df$X[contadorDf - 4]
+    dfNFe_Produtos$Qtd.[contadorDfNFe_Produtos] <- df$X[contadorDf - 3]
+    dfNFe_Produtos$`Unidade Comercial`[contadorDfNFe_Produtos] <- df$X[contadorDf - 2]
+    dfNFe_Produtos$`Valor(R$)`[contadorDfNFe_Produtos] <- df$X[contadorDf - 1]
+    dfNFe_Produtos$`Código do Produto`[contadorDfNFe_Produtos] <- df$X[contadorDf + 1]
+    dfNFe_Produtos$`Código NCM`[contadorDfNFe_Produtos] <- df$X[contadorDf + 3]
+    contadorDfNFe_Produtos <- contadorDfNFe_Produtos + 1
+  }
+  contadorDf <- contadorDf + 1
+}
+
+# Preenchendo o CFOP
+contadorDfNFe_Produtos <- 1
+contadorDf <- 1
+while(contadorDf <= nrow(df)){
+  if(((!is.na(df$X[contadorDf]) & (df$X[contadorDf] == "CFOP") == TRUE)) & (df$X[contadorDf + 1] == "Outras Despesas Acessórias") == FALSE){
+    dfNFe_Produtos$CFOP[contadorDfNFe_Produtos] <- df$X[contadorDf + 1]
+    contadorDfNFe_Produtos <- contadorDfNFe_Produtos + 1
+  }
+  contadorDf <- contadorDf + 1
+}
+
+# Preenchendo o Código EAN Comercial (campo onde encontra-se o codigo de barras, se houver)
+contadorDfNFe_Produtos <- 1
+contadorDf <- 1
+while(contadorDf <= nrow(df)){
+  if(((!is.na(df$X[contadorDf]) & (df$X[contadorDf] == "Código EAN Comercial") == TRUE))){
+    dfNFe_Produtos$`Código EAN Comercial`[contadorDfNFe_Produtos] <- df$X[contadorDf + 1]
+    contadorDfNFe_Produtos <- contadorDfNFe_Produtos + 1
+  }
+  contadorDf <- contadorDf + 1
+}
+# Eliminando as linhas onde o campo "Código EAN Comercial" não foi preenchido
+dfNFe_Produtos[dfNFe_Produtos$`Código EAN Comercial` == "Unidade Comercial", 38] <- NA
+
+# Preenchendo o valor unitário do produto
+contadorDfNFe_Produtos <- 1
+contadorDf <- 1
+while(contadorDf <= nrow(df)){
+  if(((!is.na(df$X[contadorDf]) & (df$X[contadorDf] == "Valor unitário de comercialização") == TRUE))){
+    dfNFe_Produtos$`Valor unitário de comercialização`[contadorDfNFe_Produtos] <- df$X[contadorDf + 1]
+    contadorDfNFe_Produtos <- contadorDfNFe_Produtos + 1
+  }
+  contadorDf <- contadorDf + 1
+}
