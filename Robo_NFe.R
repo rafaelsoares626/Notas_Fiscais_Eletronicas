@@ -8,8 +8,8 @@
 #7 - Vá na planilha .ods e, logo abaixo do X maiúsculo, dê um colar especial -> texto não formatado;
 #8 - Para cada NFe acessada, deve-se proceder da forma supramencionada, colando-se os novos dados na linha imediatamente posterior à do último dado da última nota colada na planilha.
 
-setwd("C:/Users/rafae/Desktop/RAFAEL/CEAT/TELETRABALHO - QUARENTENA 2021/06")
-df <- readODS::read_ods("Tratar_NFe_R.ods")
+setwd("Repositorio_Local")
+df <- readODS::read_ods("Nome_do_Arquivo.ods")
 
 # CRIANDO UMA TABELA PARA ARMAZENAR OS DADOS TRATADOS
 # Criando um vetor de 46 posições
@@ -948,3 +948,30 @@ while(contadorDf <= nrow(df)){
   }
   contadorDf <- contadorDf + 1
 }
+
+# Preenchendo as informações adicionais do produto
+contadorDfNFe_Produtos <- 1
+contadorDfNFe_Produtos2 <- 0
+contadorDf <- 1
+while(contadorDf <= nrow(df)){
+  if(!is.na(df$X[contadorDf]) & (df$X[contadorDf] == "Código do Produto") == TRUE){
+    contadorDfNFe_Produtos2 <- contadorDfNFe_Produtos2 + 1
+  }
+  if(((!is.na(df$X[contadorDf]) & (df$X[contadorDf] == "Informações adicionais do produto") == TRUE))){
+    dfNFe_Produtos$`Informações adicionais do produto`[contadorDfNFe_Produtos] <- df$X[contadorDf + 2]
+    contadorDfNFe_Produtos <- contadorDfNFe_Produtos + 1 
+  }else if(contadorDfNFe_Produtos < contadorDfNFe_Produtos2){
+    contadorDfNFe_Produtos <- contadorDfNFe_Produtos2
+  }
+  contadorDf <- contadorDf + 1
+}
+
+# Apagando as colunas desnecessárias
+dfNFe_Produtos$posChave_Acesso <- NULL
+dfNFe_Produtos$posDados_Emitente <- NULL
+dfNFe_Produtos$posDados_Destinatario <- NULL
+dfNFe_Produtos$posDados_Produtos <- NULL
+dfNFe_Produtos$qtd_Produtos <- NULL
+
+# Exportando o data frame
+write.table(dfNFe_Produtos, file = "dfNFe_Produtos.txt", row.names = FALSE, sep = "#", fileEncoding = "UTF-8")
